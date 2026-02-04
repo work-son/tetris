@@ -1,14 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+    <div id="game-container">
+        <div class="left-panel">
+            <h1>TETRIS</h1>
+            <p class="instructions">
+                Use arrow keys to move and rotate the pieces.
+                <br><br>
+                &larr; &rarr; : Move
+                <br>
+                &uarr; : Rotate
+                <br>
+                &darr; : Drop
+                <br>
+                Space : Hard Drop
+            </p>
+        </div>
+        <canvas id="game-board"></canvas>
+        <div class="right-panel">
+            <div class="info-box">
+                <h2>SCORE</h2>
+                <p id="score">0</p>
+            </div>
+            <div class="info-box">
+                <h2>NEXT</h2>
+                <canvas id="next-piece"></canvas>
+            </div>
+            <button id="pause-button">PAUSE</button>
+            <button id="start-button">START GAME</button>
+        </div>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>
