@@ -9,21 +9,25 @@
 </head>
 <body>
     <div id="game-container">
+        <!-- Left Panel: Title, Leaderboard, Instructions -->
         <div class="left-panel">
             <h1>TETRIS</h1>
+            <!-- Leaderboard -->
+            <div id="leaderboard-container" class="info-box">
+                <h2>HIGH SCORES</h2>
+                <ol id="leaderboard"></ol>
+            </div>
             <p class="instructions">
                 Use arrow keys to move and rotate the pieces.
                 <br><br>
-                &larr; &rarr; : Move
-                <br>
-                &uarr; : Rotate
-                <br>
-                &darr; : Drop
-                <br>
-                Space : Hard Drop
+                &larr; &rarr; : Move | &uarr; : Rotate | &darr; : Drop | Space : Hard Drop
             </p>
         </div>
+
+        <!-- Center Panel: Game Board -->
         <canvas id="game-board"></canvas>
+
+        <!-- Right Panel: Score, Next Piece, Controls -->
         <div class="right-panel">
             <div class="info-box">
                 <h2>SCORE</h2>
@@ -35,7 +39,20 @@
             </div>
             <button id="pause-button">PAUSE</button>
             <button id="start-button">START GAME</button>
-            <button id="sound-toggle-button">SOUND FX: ON</button> <!-- Changed from music-button -->
+            <button id="sound-toggle-button">SOUND FX: ON</button>
+        </div>
+    </div>
+
+    <!-- High Score Input Modal -->
+    <div id="highscore-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>New High Score!</h2>
+            <p>You made it into the top 10!</p>
+            <form id="highscore-form">
+                <label for="initials">Enter your initials (3 chars):</label>
+                <input type="text" id="initials" maxlength="3" required>
+                <button type="submit">SAVE</button>
+            </form>
         </div>
     </div>
 
