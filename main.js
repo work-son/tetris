@@ -7,7 +7,7 @@ const nextPieceContext = nextPieceCanvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('start-button');
 const pauseButton = document.getElementById('pause-button');
-const musicButton = document.getElementById('music-button');
+const soundToggleButton = document.getElementById('sound-toggle-button'); // Updated ID
 
 const BLOCK_SIZE = 20;
 const BOARD_WIDTH = 12;
@@ -42,22 +42,11 @@ const player = {
 let nextPiece = null;
 
 const colors = [
-    null,
-    '#FF0D72', // T
-    '#0DC2FF', // O
-    '#0DFF72', // L
-    '#F538FF', // J
-    '#FF8E0D', // I
-    '#FFE138', // S
-    '#3877FF', // Z
+    null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF',
 ];
 
 function createBoard(width, height) {
-    const matrix = [];
-    while (height--) {
-        matrix.push(new Array(width).fill(0));
-    }
-    return matrix;
+    return Array.from({ length: height }, () => Array(width).fill(0));
 }
 
 function createPiece(type) {
@@ -121,7 +110,7 @@ function boardSweep() {
         score += rowCount * 10;
         rowCount *= 2;
         dropInterval = Math.max(200, dropInterval - 10);
-        sound.clearLine(); // Play sound for each cleared line
+        sound.clearLine();
     }
 }
 
@@ -142,12 +131,12 @@ function playerDrop() {
     if (collide(board, player)) {
         player.pos.y--;
         merge(board, player);
-        sound.drop(); // Play landing sound
+        sound.land(); // Use the new landing sound
         playerReset();
         boardSweep();
         updateScore();
     } else {
-        sound.move(); // Play soft drop sound
+        sound.move();
     }
     dropCounter = 0;
 }
@@ -159,7 +148,7 @@ function playerHardDrop() {
     }
     player.pos.y--;
     merge(board, player);
-    sound.drop(); // Play landing sound
+    sound.land(); // Use the new landing sound
     playerReset();
     boardSweep();
     updateScore();
@@ -172,7 +161,7 @@ function playerMove(offset) {
     if (collide(board, player)) {
         player.pos.x -= offset;
     } else {
-        sound.move(); // Play sound on successful move
+        sound.move();
     }
 }
 
@@ -187,10 +176,10 @@ function playerRotate(dir) {
         if (offset > player.matrix[0].length) {
             rotate(player.matrix, -dir);
             player.pos.x = pos;
-            return; // Rotation failed
+            return;
         }
     }
-    sound.rotate(); // Play sound on successful rotation
+    sound.rotate();
 }
 
 function rotate(matrix, dir) {
@@ -210,12 +199,10 @@ function startGame() {
     dropInterval = 1000;
     gameRunning = true;
     gamePaused = false;
-    nextPiece = null;
     playerReset();
     updateScore();
     lastTime = 0;
     update();
-    sound.playMusic();
     startButton.textContent = "RESTART GAME";
     pauseButton.textContent = "PAUSE";
 }
@@ -228,14 +215,12 @@ function playerReset() {
         player.matrix = nextPiece;
     }
     nextPiece = createPiece(pieces[pieces.length * Math.random() | 0]);
-
     player.pos.y = 0;
     player.pos.x = (board[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(board, player)) {
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         gameRunning = false;
-        sound.stopMusic();
         sound.gameOver();
         startButton.textContent = "START GAME";
         alert('Game Over');
@@ -248,11 +233,9 @@ function togglePause() {
     gamePaused = !gamePaused;
     if (gamePaused) {
         cancelAnimationFrame(animationFrameId);
-        sound.stopMusic();
         pauseButton.textContent = "RESUME";
     } else {
         lastTime = performance.now();
-        sound.playMusic();
         update();
         pauseButton.textContent = "PAUSE";
     }
@@ -274,6 +257,17 @@ function updateScore() {
     scoreElement.innerText = score;
 }
 
+function handleSoundToggle() {
+    const isMuted = sound.toggleSound();
+    if (isMuted) {
+        soundToggleButton.textContent = 'SOUND FX: OFF';
+        soundToggleButton.classList.add('muted');
+    } else {
+        soundToggleButton.textContent = 'SOUND FX: ON';
+        soundToggleButton.classList.remove('muted');
+    }
+}
+
 function init() {
     board = createBoard(BOARD_WIDTH, BOARD_HEIGHT);
     context.fillStyle = '#000';
@@ -293,12 +287,12 @@ document.addEventListener('keydown', event => {
     }
     if (!gameRunning || gamePaused) return;
 
-    if (event.keyCode === 37) playerMove(-1); // Left Arrow
-    else if (event.keyCode === 39) playerMove(1); // Right Arrow
-    else if (event.keyCode === 40) playerDrop(); // Down Arrow
-    else if (event.keyCode === 81) playerRotate(-1); // Q
-    else if (event.keyCode === 87 || event.keyCode === 38) playerRotate(1); // W or Up Arrow
-    else if (event.keyCode === 32) { // Spacebar
+    if (event.keyCode === 37) playerMove(-1);
+    else if (event.keyCode === 39) playerMove(1);
+    else if (event.keyCode === 40) playerDrop();
+    else if (event.keyCode === 81) playerRotate(-1);
+    else if (event.keyCode === 87 || event.keyCode === 38) playerRotate(1);
+    else if (event.keyCode === 32) {
         event.preventDefault();
         playerHardDrop();
     }
@@ -306,6 +300,6 @@ document.addEventListener('keydown', event => {
 
 startButton.addEventListener('click', startGame);
 pauseButton.addEventListener('click', togglePause);
-musicButton.addEventListener('click', () => sound.toggleMusic());
+soundToggleButton.addEventListener('click', handleSoundToggle);
 
 init();

@@ -41,7 +41,6 @@ h1 {
     color: #ccc;
 }
 
-
 #game-board {
     border: 3px solid #444;
     background-color: #111;
@@ -71,7 +70,7 @@ h2 {
     border: 3px solid #444;
 }
 
-#start-button, #pause-button, #music-button {
+#start-button, #pause-button, #sound-toggle-button {
     background-color: #ff00de;
     color: #fff;
     font-family: 'Press Start 2P', cursive;
@@ -84,7 +83,7 @@ h2 {
     transition: all 0.2s ease;
 }
 
-#start-button:hover, #pause-button:hover, #music-button:hover {
+#start-button:hover, #pause-button:hover, #sound-toggle-button:hover {
     background-color: #00f7ff;
     color: #111;
     text-shadow: 2px 2px 0px #fff;
@@ -94,34 +93,28 @@ h2 {
     background-color: #ff9d00;
 }
 
-#music-button {
-    background-color: #0DFF72; /* Green for music */
+#sound-toggle-button {
+    background-color: #0DFF72; /* Green for ON */
 }
 
+#sound-toggle-button.muted {
+    background-color: #888; /* Grey for OFF */
+}
 
 @media (max-width: 800px) {
     body {
-        /* Adjust body for small screens */
-        height: auto; /* Allow body to grow */
-        align-items: flex-start; /* Align content to the top */
-        padding: 20px 0; /* Add some vertical padding */
+        height: auto;
+        align-items: flex-start;
+        padding: 20px 0;
     }
 
     #game-container {
         flex-direction: column;
         align-items: center;
-        width: 95vw; /* Make container responsive */
+        width: 95vw;
     }
 
-    .left-panel {
-        order: 2;
-    }
-
-    .right-panel {
-        order: 1;
-    }
-
-    #game-board {
-        order: 0;
-    }
+    .left-panel { order: 2; }
+    .right-panel { order: 1; }
+    #game-board { order: 0; }
 }
