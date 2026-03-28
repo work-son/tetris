@@ -15,7 +15,7 @@ const highscoreForm = document.getElementById('highscore-form');
 const initialsInput = document.getElementById('initials');
 
 // Game Constants
-const BLOCK_SIZE = 20;
+const BLOCK_SIZE = 28; // Increased from 20 to 28
 const BOARD_WIDTH = 12;
 const BOARD_HEIGHT = 20;
 const HIGH_SCORE_COUNT = 10;

@@ -29,12 +29,12 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 200px; /* Give panels a fixed width */
+    width: 240px; /* Increased from 200px */
 }
 
 h1 {
-    font-size: 3rem;
-    margin: 0 0 20px 0; /* Add margin below title */
+    font-size: 2.5rem; /* Decreased from 3rem */
+    margin: 0 0 20px 0;
     color: #ff00de;
     text-shadow: 3px 3px 0px #00f7ff;
 }
