@@ -1,3 +1,4 @@
+import Sound from './sound.js';
 
 const canvas = document.getElementById('game-board');
 const context = canvas.getContext('2d');
@@ -6,10 +7,14 @@ const nextPieceContext = nextPieceCanvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('start-button');
 const pauseButton = document.getElementById('pause-button');
+const musicButton = document.getElementById('music-button');
 
 const BLOCK_SIZE = 20;
 const BOARD_WIDTH = 12;
 const BOARD_HEIGHT = 20;
+
+// Sound instance
+const sound = new Sound();
 
 // Set canvas sizes
 canvas.width = BOARD_WIDTH * BLOCK_SIZE;
@@ -115,7 +120,8 @@ function boardSweep() {
         ++y;
         score += rowCount * 10;
         rowCount *= 2;
-        dropInterval = Math.max(200, dropInterval - 10); 
+        dropInterval = Math.max(200, dropInterval - 10);
+        sound.clearLine(); // Play sound for each cleared line
     }
 }
 
@@ -136,9 +142,12 @@ function playerDrop() {
     if (collide(board, player)) {
         player.pos.y--;
         merge(board, player);
+        sound.drop(); // Play landing sound
         playerReset();
         boardSweep();
         updateScore();
+    } else {
+        sound.move(); // Play soft drop sound
     }
     dropCounter = 0;
 }
@@ -150,6 +159,7 @@ function playerHardDrop() {
     }
     player.pos.y--;
     merge(board, player);
+    sound.drop(); // Play landing sound
     playerReset();
     boardSweep();
     updateScore();
@@ -161,6 +171,8 @@ function playerMove(offset) {
     player.pos.x += offset;
     if (collide(board, player)) {
         player.pos.x -= offset;
+    } else {
+        sound.move(); // Play sound on successful move
     }
 }
 
@@ -175,9 +187,10 @@ function playerRotate(dir) {
         if (offset > player.matrix[0].length) {
             rotate(player.matrix, -dir);
             player.pos.x = pos;
-            return;
+            return; // Rotation failed
         }
     }
+    sound.rotate(); // Play sound on successful rotation
 }
 
 function rotate(matrix, dir) {
@@ -202,6 +215,7 @@ function startGame() {
     updateScore();
     lastTime = 0;
     update();
+    sound.playMusic();
     startButton.textContent = "RESTART GAME";
     pauseButton.textContent = "PAUSE";
 }
@@ -221,6 +235,8 @@ function playerReset() {
     if (collide(board, player)) {
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         gameRunning = false;
+        sound.stopMusic();
+        sound.gameOver();
         startButton.textContent = "START GAME";
         alert('Game Over');
         init();
@@ -232,9 +248,11 @@ function togglePause() {
     gamePaused = !gamePaused;
     if (gamePaused) {
         cancelAnimationFrame(animationFrameId);
+        sound.stopMusic();
         pauseButton.textContent = "RESUME";
     } else {
         lastTime = performance.now();
+        sound.playMusic();
         update();
         pauseButton.textContent = "PAUSE";
     }
@@ -288,5 +306,6 @@ document.addEventListener('keydown', event => {
 
 startButton.addEventListener('click', startGame);
 pauseButton.addEventListener('click', togglePause);
+musicButton.addEventListener('click', () => sound.toggleMusic());
 
 init();

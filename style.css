@@ -71,7 +71,7 @@ h2 {
     border: 3px solid #444;
 }
 
-#start-button, #pause-button {
+#start-button, #pause-button, #music-button {
     background-color: #ff00de;
     color: #fff;
     font-family: 'Press Start 2P', cursive;
@@ -84,7 +84,7 @@ h2 {
     transition: all 0.2s ease;
 }
 
-#start-button:hover, #pause-button:hover {
+#start-button:hover, #pause-button:hover, #music-button:hover {
     background-color: #00f7ff;
     color: #111;
     text-shadow: 2px 2px 0px #fff;
@@ -92,6 +92,10 @@ h2 {
 
 #pause-button {
     background-color: #ff9d00;
+}
+
+#music-button {
+    background-color: #0DFF72; /* Green for music */
 }
 
 
